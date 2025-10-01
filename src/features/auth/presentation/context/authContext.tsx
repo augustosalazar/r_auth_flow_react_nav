@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AuthLocalDataSource } from "../features/auth/data/datasources/AuthLocalDataSource";
-import { AuthRepositoryImpl } from "../features/auth/data/repositories/AuthRepositoryImpl";
-import { GetCurrentUserUseCase } from "../features/auth/domain/auth/usecases/GetCurrentUserUseCase";
-import { LoginUseCase } from "../features/auth/domain/auth/usecases/LoginUseCase";
-import { LogoutUseCase } from "../features/auth/domain/auth/usecases/LogoutUseCase";
-import { SignupUseCase } from "../features/auth/domain/auth/usecases/SignupUseCase";
-import { AuthUser } from "../features/auth/domain/entities/AuthUser";
+import { AuthLocalDataSource } from "../../data/datasources/AuthLocalDataSource";
+import { AuthRepositoryImpl } from "../../data/repositories/AuthRepositoryImpl";
+import { GetCurrentUserUseCase } from "../../domain/auth/usecases/GetCurrentUserUseCase";
+import { LoginUseCase } from "../../domain/auth/usecases/LoginUseCase";
+import { LogoutUseCase } from "../../domain/auth/usecases/LogoutUseCase";
+import { SignupUseCase } from "../../domain/auth/usecases/SignupUseCase";
+import { AuthUser } from "../../domain/entities/AuthUser";
+
 
 
 
