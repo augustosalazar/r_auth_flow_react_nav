@@ -43,7 +43,6 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
               title={item.name}
               description={`Qty: ${item.quantity}`}
               left={(props) => <List.Icon {...props} icon="cube-outline" />}
-              //onPress={() => router.push(`/(protected)/${item._id}` as never)} // navigate to update
               onPress={
                 () => {
                   console.log("Navigating to UpdateProductScreen with id:", item._id);

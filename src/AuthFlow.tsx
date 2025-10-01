@@ -7,6 +7,7 @@ import login from "./features/auth/presentation/login";
 import signup from "./features/auth/presentation/signup";
 import AddProductScreen from "./features/products/presentation/screens/AddProductScreen";
 import ProductListScreen from "./features/products/presentation/screens/ProductListScreen";
+import UpdateProductScreen from "./features/products/presentation/screens/UpdateProductScreen";
 import settings from "./settings";
 
 
@@ -33,7 +34,7 @@ export default function AuthFlow() {
         />
         <ProductsStack.Screen
           name="UpdateProductScreen"
-          component={AddProductScreen}
+          component={UpdateProductScreen}
           options={{ title: "Update Product" }}
         />
       </ProductsStack.Navigator>
