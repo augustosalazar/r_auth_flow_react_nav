@@ -1,15 +1,25 @@
 
+import { useNavigation } from "@/.expo/types/router";
 import { Product } from "@/src/features/products/domain/entities/Product";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Surface, Text, TextInput } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 
-export default function UpdateProductScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+interface UpdateProductScreenProps {
+  route: {
+    params: {
+      id: string;
+    };
+  };
+}
+
+export default function UpdateProductScreen({ route }: UpdateProductScreenProps) {
+  const { id } = route.params;
+
+  const navigation = useNavigation();
+
   const { getProduct, updateProduct } = useProducts();
-  const router = useRouter();
+
 
   const [product, setProduct] = useState<Product | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -19,9 +29,10 @@ export default function UpdateProductScreen() {
   const [quantity, setQuantity] = useState("");
 
   useEffect(() => {
+    console.log("UpdateProductScreen id:", id);
     const load = async () => {
       try {
-        const p = await getProduct(id!);
+        const p = await getProduct(id);
         if (!p) {
           setNotFound(true);
         } else {
@@ -35,7 +46,7 @@ export default function UpdateProductScreen() {
       }
     };
     if (id) load();
-  }, [id]);
+  }, [getProduct, id]);
 
   const handleUpdate = async () => {
     if (!product) return;
@@ -45,29 +56,29 @@ export default function UpdateProductScreen() {
       description,
       quantity: Number(quantity),
     });
-    router.back();
+    navigation.goBack();
   };
 
   if (notFound) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", padding: 16 }}>
+      <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
         <Text variant="bodyLarge" style={{ color: "red" }}>
           Product not found
         </Text>
-      </View>
+      </Surface>
     );
   }
 
   if (!product) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", padding: 16 }}>
+      <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
         <Text>Loading...</Text>
-      </View>
+      </Surface>
     );
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 16 }}>
+    <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
       {/* <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
         Update Product
       </Text> */}
@@ -97,6 +108,6 @@ export default function UpdateProductScreen() {
       <Button mode="contained" onPress={handleUpdate}>
         Update
       </Button>
-    </View>
+    </Surface>
   );
 }

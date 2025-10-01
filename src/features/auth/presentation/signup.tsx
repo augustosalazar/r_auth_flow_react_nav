@@ -1,7 +1,6 @@
 import { useAuth } from "@/src/context/authContext";
 import { useState } from "react";
-import { View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Surface, Text, TextInput } from "react-native-paper";
 
 export default function SignupScreen({ navigation }: { navigation: any }) {
   const { signup } = useAuth();
@@ -21,7 +20,7 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
         Create an Account
       </Text>
@@ -54,10 +53,10 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
       </Button>
 
       <Button mode="text" onPress={() => navigation.goBack()}>
-      Already have an account? Log In
-    </Button>
+        Already have an account? Log In
+      </Button>
 
 
-    </View>
+    </Surface>
   );
 }

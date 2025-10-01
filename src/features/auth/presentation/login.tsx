@@ -1,7 +1,6 @@
 import { useAuth } from "@/src/context/authContext";
 import { useState } from "react";
-import { View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Surface, Text, TextInput } from "react-native-paper";
 
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
@@ -22,7 +21,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
         Welcome! Please log in
       </Text>
@@ -40,7 +39,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         label="Password"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureTextEntry={true}
         style={{ marginBottom: 20 }}
       />
 
@@ -58,6 +57,6 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         Don’t have an account? Sign Up
       </Button>
 
-    </View>
+    </Surface>
   );
 }

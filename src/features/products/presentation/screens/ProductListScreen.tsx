@@ -1,17 +1,14 @@
 import { useAuth } from "@/src/context/authContext";
-
-import { useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
-import { Button, FAB, List } from "react-native-paper";
+import { Button, FAB, List, Surface } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 
-export default function ProductListScreen() {
+export default function ProductListScreen({ navigation }: { navigation: any }) {
   const { products, removeProduct } = useProducts();
   const { logout } = useAuth();
-  const router = useRouter();
 
   return (
-    <View style={{ flex: 1 }}>
+    <Surface style={{ flex: 1 }}>
       {/* AppBar with Logout */}
       {/* <Appbar.Header>
         <Appbar.Content title="Products" />
@@ -46,7 +43,13 @@ export default function ProductListScreen() {
               title={item.name}
               description={`Qty: ${item.quantity}`}
               left={(props) => <List.Icon {...props} icon="cube-outline" />}
-              onPress={() => router.push(`/(protected)/${item._id}` as never)} // navigate to update
+              //onPress={() => router.push(`/(protected)/${item._id}` as never)} // navigate to update
+              onPress={
+                () => {
+                  console.log("Navigating to UpdateProductScreen with id:", item._id);
+                  navigation.navigate("UpdateProductScreen", { id: item._id });
+                }
+              }
               right={() => (
                 <Button onPress={() => removeProduct(item._id)}>Delete</Button>
               )}
@@ -63,8 +66,8 @@ export default function ProductListScreen() {
           right: 16,
           bottom: 16,
         }}
-        onPress={() => router.push("/(protected)/add")} // navigate to add
+        onPress={() => navigation.navigate("AddProductScreen")} // navigate to add
       />
-    </View>
+    </Surface>
   );
 }
