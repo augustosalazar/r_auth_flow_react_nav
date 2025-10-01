@@ -2,6 +2,7 @@ import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import { IconButton } from "react-native-paper";
 import { useAuth } from "./context/authContext";
 import login from "./features/auth/presentation/login";
 import signup from "./features/auth/presentation/signup";
@@ -13,49 +14,46 @@ import settings from "./settings";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const ProductsStack = createStackNavigator();
-
 
 export default function AuthFlow() {
-  const { isLoggedIn } = useAuth();
-
-  function ProductsStackScreen() {
-    return (
-      <ProductsStack.Navigator>
-        <ProductsStack.Screen
-          name="Main"
-          component={ProductListScreen}
-          options={{ headerShown: false }}
-        />
-        <ProductsStack.Screen
-          name="AddProductScreen"
-          component={AddProductScreen}
-          options={{ title: "Add Product" }}
-        />
-        <ProductsStack.Screen
-          name="UpdateProductScreen"
-          component={UpdateProductScreen}
-          options={{ title: "Update Product" }}
-        />
-      </ProductsStack.Navigator>
-    );
-  }
+  const { isLoggedIn, logout } = useAuth();
 
   function ContentTabs() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={ProductsStackScreen}
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: true,
+          headerTitle: "Auth demo with React Navigation",
+          headerRight: () => (
+            <IconButton icon="logout" onPress={() => logout()} />
+          ),
+          headerTitleAlign: "left",
+          headerStyle: {
+            elevation: 0, // Remove shadow on Android
+            shadowOpacity: 0, // Remove shadow on iOS
+          },
+        }}
+
+      >
+        <Tab.Screen
+          name="Home"
+          component={ProductListScreen}
           options={{
+
             tabBarIcon: ({ color }) => (
               <FontAwesome6 name="house" size={24} color={color} iconStyle="solid" />
             )
-          }} />
-        <Tab.Screen name="Profile" component={settings}
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={settings}
           options={{
             tabBarIcon: ({ color }) => (
               <FontAwesome6 name="user" size={24} color={color} />
             )
-          }} />
+          }}
+        />
       </Tab.Navigator>
     );
   }
@@ -63,14 +61,31 @@ export default function AuthFlow() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
-        <Stack.Screen name="App" component={ContentTabs} />
+        <>
+          <Stack.Screen name="App" component={ContentTabs} />
+          <Stack.Screen
+            name="AddProductScreen"
+            component={AddProductScreen}
+            options={{
+              title: "Add Product",
+              headerShown: true,
+              presentation: 'modal' // Optional: makes it slide up from bottom
+            }}
+          />
+          <Stack.Screen
+            name="UpdateProductScreen"
+            component={UpdateProductScreen}
+            options={{
+              title: "Update Product",
+              headerShown: true,
+              presentation: 'modal' // Optional: makes it slide up from bottom
+            }}
+          />
+        </>
       ) : (
         <>
           <Stack.Screen name="Login" component={login} />
-          <Stack.Screen
-            name="Signup"
-            component={signup}
-          />
+          <Stack.Screen name="Signup" component={signup} />
         </>
       )}
     </Stack.Navigator>
