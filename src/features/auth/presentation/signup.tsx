@@ -1,10 +1,9 @@
 import { useAuth } from "@/src/context/authContext";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
-export default function SignupScreen() {
+export default function SignupScreen({ navigation }: { navigation: any }) {
   const { signup } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,9 +53,11 @@ export default function SignupScreen() {
         Sign Up
       </Button>
 
-      <Link href="/(auth)/login" style={{ alignSelf: "center", marginTop: 10 }}>
-        <Text>Already have an account? Log In</Text>
-      </Link>
+      <Button mode="text" onPress={() => navigation.goBack()}>
+      Already have an account? Log In
+    </Button>
+
+
     </View>
   );
 }
