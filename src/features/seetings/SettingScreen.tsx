@@ -2,10 +2,10 @@ import { StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 
 
-export default function Tab() {
+export default function SettingScreen() {
     return (
         <Surface style={styles.container}>
-            <Text>Tab Settings</Text>
+            <Text>Settings..</Text>
         </Surface>
     );
 }
