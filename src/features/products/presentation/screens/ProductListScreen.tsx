@@ -1,4 +1,5 @@
-import { useAuth } from "@/src/context/authContext";
+
+import { useAuth } from "@/src/features/auth/presentation/context/authContext";
 import { FlatList, View } from "react-native";
 import { Button, FAB, List, Surface } from "react-native-paper";
 import { useProducts } from "../context/productContext";

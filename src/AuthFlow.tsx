@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { IconButton } from "react-native-paper";
-import { useAuth } from "./context/authContext";
-import login from "./features/auth/presentation/login";
-import signup from "./features/auth/presentation/signup";
+
+import { useAuth } from "./features/auth/presentation/context/authContext";
+import LoginScreen from "./features/auth/presentation/screens/LoginScreen";
+import SignupScreen from "./features/auth/presentation/screens/SignupScreen";
 import AddProductScreen from "./features/products/presentation/screens/AddProductScreen";
 import ProductListScreen from "./features/products/presentation/screens/ProductListScreen";
 import UpdateProductScreen from "./features/products/presentation/screens/UpdateProductScreen";
@@ -84,8 +85,8 @@ export default function AuthFlow() {
         </>
       ) : (
         <>
-          <Stack.Screen name="Login" component={login} />
-          <Stack.Screen name="Signup" component={signup} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
         </>
       )}
     </Stack.Navigator>

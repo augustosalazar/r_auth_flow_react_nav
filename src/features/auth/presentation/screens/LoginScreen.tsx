@@ -1,19 +1,21 @@
-import { useAuth } from "@/src/context/authContext";
+
 import { useState } from "react";
 import { Button, Surface, Text, TextInput } from "react-native-paper";
+import { useAuth } from "../context/authContext";
 
-export default function SignupScreen({ navigation }: { navigation: any }) {
-  const { signup } = useAuth();
+
+export default function LoginScreen({ navigation }: { navigation: any }) {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSignup = async () => {
+  const handleLogin = async () => {
     try {
       setLoading(true);
-      await signup(email, password);
+      await login(email, password);
     } catch (err) {
-      console.error("Signup failed", err);
+      console.error("Login failed", err);
     } finally {
       setLoading(false);
     }
@@ -22,7 +24,7 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
   return (
     <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
-        Create an Account
+        Welcome! Please log in
       </Text>
 
       <TextInput
@@ -38,24 +40,23 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
         label="Password"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureTextEntry={true}
         style={{ marginBottom: 20 }}
       />
 
       <Button
         mode="contained"
-        onPress={handleSignup}
+        onPress={handleLogin}
         loading={loading}
         disabled={loading}
         style={{ marginBottom: 10 }}
       >
-        Sign Up
+        Log In
       </Button>
 
-      <Button mode="text" onPress={() => navigation.goBack()}>
-        Already have an account? Log In
+      <Button mode="text" onPress={() => navigation.navigate('Signup')}>
+        Don’t have an account? Sign Up
       </Button>
-
 
     </Surface>
   );

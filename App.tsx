@@ -2,7 +2,8 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/
 import { useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import AuthFlow from "./src/AuthFlow";
-import { AuthProvider } from "./src/context/authContext";
+
+import { AuthProvider } from "./src/features/auth/presentation/context/authContext";
 import { ProductProvider } from "./src/features/products/presentation/context/productContext";
 import { darkTheme, lightTheme } from "./src/theme/theme";
 
