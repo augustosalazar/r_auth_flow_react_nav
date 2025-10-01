@@ -1,13 +1,15 @@
 import { AuthUser } from "../../domain/entities/AuthUser";
+import { IAuthDataSource } from "./iAuthDataSource";
 
 type StoredUser = AuthUser & { password: string };
 
-export class AuthLocalDataSource {
+export class AuthLocalDataSource implements IAuthDataSource {
   private users: StoredUser[] = [
     { id: "1", email: "test@example.com", password: "123456" },
   ];
   private currentUser: AuthUser | null = null;
 
+  
   async login(email: string, password: string): Promise<AuthUser> {
     const user = this.users.find(
       (u) => u.email === email && u.password === password
