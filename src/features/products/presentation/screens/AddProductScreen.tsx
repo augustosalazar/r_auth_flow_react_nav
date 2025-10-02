@@ -1,11 +1,12 @@
 
-import { useRouter } from "expo-router";
+
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Button, Surface, TextInput } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 
 export default function AddProductScreen() {
-  const router = useRouter();
+  const navigation = useNavigation();
   const { addProduct } = useProducts();
 
   const [name, setName] = useState("");
@@ -21,7 +22,7 @@ export default function AddProductScreen() {
       quantity: Number(quantity),
     });
 
-    router.back(); // go back to ProductListScreen
+    navigation.goBack(); // go back to ProductListScreen
   };
 
   return (

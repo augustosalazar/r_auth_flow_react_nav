@@ -2,22 +2,34 @@ import { ILocalPreferences } from "@/src/core/iLocalPreferences";
 import { AuthUser } from "../../domain/entities/AuthUser";
 import { IAuthDataSource } from "./iAuthDataSource";
 
-
-
 export class AuthPrefsDataSource implements IAuthDataSource {
     constructor(private localPreferences: ILocalPreferences) {}
-    
-    login(email: string, password: string): Promise<AuthUser> {
-        throw new Error("Method not implemented.");
+
+    async login(email: string, password: string): Promise<AuthUser> {
+        const listOfUsers: AuthUser[] =  await this.localPreferences.getAllEntries("users");
+        console.log("listOfUsers", listOfUsers);
+        for (const user of listOfUsers) {
+
+            if (user.email === email && user.password === password) {
+                const authUser: AuthUser = { email: user.email, password: user.password };
+                this.localPreferences.storeData("currentUser", JSON.stringify(authUser));
+                return Promise.resolve(authUser);
+            }
+        }
+        return Promise.reject(new Error("Invalid credentials"));
     }
-    signup(email: string, password: string): Promise<AuthUser> {
-        throw new Error("Method not implemented.");
+    async signup(email: string, password: string): Promise<AuthUser> {
+        const newUser: AuthUser = { email, password };
+        await this.localPreferences.storeEntry<AuthUser>("users", newUser);
+        this.localPreferences.storeData<AuthUser>("currentUser", newUser);
+        return Promise.resolve(newUser);
     }
-    logout(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async logout(): Promise<void> {
+        await this.localPreferences.removeData("currentUser");
     }
-    getCurrentUser(): Promise<AuthUser | null> {
-        throw new Error("Method not implemented.");
+    async getCurrentUser(): Promise<AuthUser | null> {
+        const user = await this.localPreferences.retrieveData<AuthUser>("currentUser");
+        return user ? user : null;
     }
 
 }

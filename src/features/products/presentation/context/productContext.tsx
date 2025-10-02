@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { ProductLocalDataSource } from "@/src/features/products/data/datasources/ProductLocalDataSource";
+import { LocalPreferencesAsyncStorage } from "@/src/core/LocalPreferencesAsyncStorage";
 import { ProductRepositoryImpl } from "@/src/features/products/data/repositories/ProductRepositoryImpl";
 import { NewProduct, Product } from "@/src/features/products/domain/entities/Product";
 import { AddProductUseCase } from "@/src/features/products/domain/usecases/AddProductUseCase";
@@ -16,9 +16,17 @@ import { DeleteProductUseCase } from "@/src/features/products/domain/usecases/De
 import { GetProductByIdUseCase } from "@/src/features/products/domain/usecases/GetProductByIdUseCase";
 import { GetProductsUseCase } from "@/src/features/products/domain/usecases/GetProductsUseCase";
 import { UpdateProductUseCase } from "@/src/features/products/domain/usecases/UpdateProductUseCase";
+import { ProductLocalDataSourceAsyncStorageImpl } from "../../data/datasources/ProductLocalDataSourceAsyncStorageImpl";
 
 // --- Setup repo + usecases ---
-const repo = new ProductRepositoryImpl(new ProductLocalDataSource());
+
+// use this to have products in memory only
+//const repo = new ProductRepositoryImpl(new ProductLocalDataSourceImpl());
+
+const prefsImpl = new LocalPreferencesAsyncStorage();
+const productLocalDataSource = new ProductLocalDataSourceAsyncStorageImpl(prefsImpl);
+const repo = new ProductRepositoryImpl(productLocalDataSource);
+
 const addProductUC = new AddProductUseCase(repo);
 const updateProductUC = new UpdateProductUseCase(repo);
 const deleteProductUC = new DeleteProductUseCase(repo);

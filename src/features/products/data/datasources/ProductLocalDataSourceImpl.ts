@@ -1,6 +1,7 @@
 import { NewProduct, Product } from "../../domain/entities/Product";
+import { ProductDataSource } from "./ProductDataSource";
 
-export class ProductLocalDataSource {
+export class ProductLocalDataSourceImpl implements ProductDataSource {
   private products: Product[] = [
     { _id: "1", name: "Apple", description: "Fresh red apple", quantity: 10 },
     { _id: "2", name: "Banana", description: "Yellow banana", quantity: 20 },

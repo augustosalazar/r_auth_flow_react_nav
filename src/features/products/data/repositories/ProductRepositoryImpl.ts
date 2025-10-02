@@ -1,9 +1,10 @@
 import { NewProduct, Product } from "../../domain/entities/Product";
 import { ProductRepository } from "../../domain/repositories/ProductRepository";
-import { ProductLocalDataSource } from "../datasources/ProductLocalDataSource";
+import { ProductDataSource } from "../datasources/ProductDataSource";
+
 
 export class ProductRepositoryImpl implements ProductRepository {
-  constructor(private local: ProductLocalDataSource) {}
+  constructor(private local: ProductDataSource) {}
 
   async getProducts(): Promise<Product[]> {
     return this.local.getProducts();
