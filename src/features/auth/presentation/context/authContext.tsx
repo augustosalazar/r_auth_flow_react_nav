@@ -15,7 +15,7 @@ import { AuthUser } from "../../domain/entities/AuthUser";
 //const localDataSource = new AuthLocalDataSource();
 
 // use this to have users persisted in local storage (AsyncStorage)
-const prefsImpl = new LocalPreferencesAsyncStorage();
+const prefsImpl = LocalPreferencesAsyncStorage.getInstance();
 const localDataSource = new AuthPrefsDataSource(prefsImpl);
 
 

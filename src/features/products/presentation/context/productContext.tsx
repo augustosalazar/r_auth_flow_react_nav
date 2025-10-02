@@ -23,7 +23,7 @@ import { ProductLocalDataSourceAsyncStorageImpl } from "../../data/datasources/P
 // use this to have products in memory only
 //const repo = new ProductRepositoryImpl(new ProductLocalDataSourceImpl());
 
-const prefsImpl = new LocalPreferencesAsyncStorage();
+const prefsImpl = LocalPreferencesAsyncStorage.getInstance();
 const productLocalDataSource = new ProductLocalDataSourceAsyncStorageImpl(prefsImpl);
 const repo = new ProductRepositoryImpl(productLocalDataSource);
 
