@@ -72,14 +72,37 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
         return data as Product[];
     }
 
-    
+
     getProductById(id: string): Promise<Product | null> {
         throw new Error("Method not implemented.");
     }
-    addProduct(product: NewProduct): Promise<Product> {
-        throw new Error("Method not implemented.");
+    async  addProduct(product: NewProduct): Promise<void> {
+        const url = `${this.baseUrl}/database/${this.contract}/insert`;
+
+        const body = JSON.stringify({
+            tableName: this.table,
+            records: [product], // 👈 the API expects an array of records
+        });
+
+        const response = await this.authorizedFetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+        });
+
+        if (response.status === 201) {
+            return Promise.resolve();
+        } else if (response.status === 401) {
+            throw new Error("Unauthorized (token issue)");
+        } else {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(
+                `Error adding product: ${response.status} - ${errorBody.message ?? "Unknown error"}`
+            );
+        }
     }
-    updateProduct(product: Product): Promise<Product> {
+    
+    updateProduct(product: Product): Promise<void> {
         throw new Error("Method not implemented.");
     }
     deleteProduct(id: string): Promise<void> {
