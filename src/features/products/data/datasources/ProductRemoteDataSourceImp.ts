@@ -76,7 +76,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
     getProductById(id: string): Promise<Product | null> {
         throw new Error("Method not implemented.");
     }
-    async  addProduct(product: NewProduct): Promise<void> {
+    async addProduct(product: NewProduct): Promise<void> {
         const url = `${this.baseUrl}/database/${this.contract}/insert`;
 
         const body = JSON.stringify({
@@ -101,15 +101,93 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
             );
         }
     }
-    
-    updateProduct(product: Product): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async updateProduct(product: Product): Promise<void> {
+        const url = `${this.baseUrl}/database/${this.contract}/update`;
+
+        const { _id, ...updates } = product; // 👈 separate id from fields
+
+        const body = JSON.stringify({
+            tableName: this.table,
+            idColumn: "_id",
+            idValue: _id,
+            updates,
+        });
+
+        const response = await this.authorizedFetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body,
+        });
+
+        if (response.status === 200) {
+            return Promise.resolve();
+        } else if (response.status === 401) {
+            throw new Error("Unauthorized (token issue)");
+        } else {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(
+                `Error updating product: ${response.status} - ${errorBody.message ?? "Unknown error"
+                }`
+            );
+        }
     }
-    deleteProduct(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async deleteProduct(id: string): Promise<void> {
+        const url = `${this.baseUrl}/database/${this.contract}/delete`;
+
+        const body = JSON.stringify({
+            tableName: this.table,
+            idColumn: "_id",
+            idValue: id,
+        });
+
+        const response = await this.authorizedFetch(url, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body,
+        });
+
+        if (response.status === 200) {
+            return Promise.resolve();
+        } else if (response.status === 401) {
+            throw new Error("Unauthorized (token issue)");
+        } else {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(
+                `Error deleting product: ${response.status} - ${errorBody.message ?? "Unknown error"
+                }`
+            );
+        }
     }
-    getById(id: string): Promise<Product | undefined> {
-        throw new Error("Method not implemented.");
+    async getById(id: string): Promise<Product | undefined> {
+        const url = `${this.baseUrl}/database/${this.contract}/read`;
+
+        const body = JSON.stringify({
+            tableName: this.table,
+            filters: {
+                _id: id,
+            },
+        });
+
+        const response = await this.authorizedFetch(url, {
+            method: "POST", // 👈 for queries with filters
+            headers: { "Content-Type": "application/json" },
+            body,
+        });
+
+        if (response.status === 200) {
+            const data: Product[] = await response.json();
+            return data.length > 0 ? data[0] : undefined;
+        } else if (response.status === 401) {
+            throw new Error("Unauthorized (token issue)");
+        } else {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(
+                `Error fetching product by id: ${response.status} - ${errorBody.message ?? "Unknown error"
+                }`
+            );
+        }
     }
 
 }
