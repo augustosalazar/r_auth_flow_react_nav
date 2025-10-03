@@ -19,12 +19,6 @@ import { ProductRemoteDataSourceImp } from "../../data/datasources/ProductRemote
 
 // --- Setup repo + usecases ---
 
-// use this to have products in memory only
-//const repo = new ProductRepositoryImpl(new ProductLocalDataSourceImpl());
-
-//const prefsImpl = LocalPreferencesAsyncStorage.getInstance();
-//const productLocalDataSource = new ProductLocalDataSourceAsyncStorageImpl(prefsImpl);
-
 const remoteDataSource = new ProductRemoteDataSourceImp();
 
 

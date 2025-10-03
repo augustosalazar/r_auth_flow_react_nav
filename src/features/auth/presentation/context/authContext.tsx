@@ -1,6 +1,4 @@
-import { LocalPreferencesAsyncStorage } from "@/src/core/LocalPreferencesAsyncStorage";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AuthPrefsDataSource } from "../../data/datasources/AuthPrefsDataSource";
 import { AuthRemoteDataSourceImpl } from "../../data/datasources/AuthRemoteDataSourceImp";
 import { AuthRepositoryImpl } from "../../data/repositories/AuthRepositoryImpl";
 
@@ -10,9 +8,6 @@ import { LoginUseCase } from "../../domain/usecases/LoginUseCase";
 import { LogoutUseCase } from "../../domain/usecases/LogoutUseCase";
 import { SignupUseCase } from "../../domain/usecases/SignupUseCase";
 
-
-const prefsImpl = LocalPreferencesAsyncStorage.getInstance();
-const localDataSource = new AuthPrefsDataSource(prefsImpl);
 
 const authRemoteDataSource = new AuthRemoteDataSourceImpl();
 const repository = new AuthRepositoryImpl(authRemoteDataSource);
