@@ -56,6 +56,11 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Load products initially
+  useEffect(() => {
+    refreshProducts();
+  }, []);
+
   const refreshProducts = async () => {
     try {
       setIsLoading(true);
@@ -122,10 +127,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Load products initially
-  useEffect(() => {
-    refreshProducts();
-  }, []);
+
 
   const value = useMemo(
     () => ({

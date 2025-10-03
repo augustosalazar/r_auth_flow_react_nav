@@ -9,6 +9,6 @@ export class GetProductByIdUseCase {
   }
 
   async execute(id: string): Promise<Product | undefined> {
-    return await this.repo.getById(id);
+    return await this.repo.getProductById(id);
   }
 }

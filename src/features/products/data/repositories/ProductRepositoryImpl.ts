@@ -10,7 +10,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     return this.local.getProducts();
   }
 
-  async getProductById(id: string): Promise<Product | null> {
+  async getProductById(id: string): Promise<Product | undefined> {
     return this.local.getProductById(id);
   }
 
@@ -26,7 +26,5 @@ export class ProductRepositoryImpl implements ProductRepository {
     return this.local.deleteProduct(id);
   }
 
-  async getById(id: string): Promise<Product | undefined> {
-    return this.local.getById(id);
-  }
+
 }
