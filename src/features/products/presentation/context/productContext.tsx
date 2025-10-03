@@ -8,28 +8,14 @@ import React, {
   useState,
 } from "react";
 
-import { ProductRepositoryImpl } from "@/src/features/products/data/repositories/ProductRepositoryImpl";
+import { useDI } from "@/src/core/di/DIProvider";
+import { TOKENS } from "@/src/core/di/tokens";
 import { NewProduct, Product } from "@/src/features/products/domain/entities/Product";
-import { AddProductUseCase } from "@/src/features/products/domain/usecases/AddProductUseCase";
-import { DeleteProductUseCase } from "@/src/features/products/domain/usecases/DeleteProductUseCase";
-import { GetProductByIdUseCase } from "@/src/features/products/domain/usecases/GetProductByIdUseCase";
-import { GetProductsUseCase } from "@/src/features/products/domain/usecases/GetProductsUseCase";
-import { UpdateProductUseCase } from "@/src/features/products/domain/usecases/UpdateProductUseCase";
-import { ProductRemoteDataSourceImp } from "../../data/datasources/ProductRemoteDataSourceImp";
-
-// --- Setup repo + usecases ---
-
-const remoteDataSource = new ProductRemoteDataSourceImp();
-
-
-const repo = new ProductRepositoryImpl(remoteDataSource);
-
-
-const addProductUC = new AddProductUseCase(repo);
-const updateProductUC = new UpdateProductUseCase(repo);
-const deleteProductUC = new DeleteProductUseCase(repo);
-const getProductsUC = new GetProductsUseCase(repo);
-const getProductByIdUC = new GetProductByIdUseCase(repo);
+import { AddProductUseCase } from "../../domain/usecases/AddProductUseCase";
+import { DeleteProductUseCase } from "../../domain/usecases/DeleteProductUseCase";
+import { GetProductByIdUseCase } from "../../domain/usecases/GetProductByIdUseCase";
+import { GetProductsUseCase } from "../../domain/usecases/GetProductsUseCase";
+import { UpdateProductUseCase } from "../../domain/usecases/UpdateProductUseCase";
 
 // --- Context ---
 type ProductContextType = {
@@ -46,6 +32,15 @@ type ProductContextType = {
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function ProductProvider({ children }: { children: ReactNode }) {
+
+  const di = useDI();
+
+  const addProductUC = di.resolve<AddProductUseCase>(TOKENS.AddProductUC);
+  const updateProductUC = di.resolve<UpdateProductUseCase>(TOKENS.UpdateProductUC);
+  const deleteProductUC = di.resolve<DeleteProductUseCase>(TOKENS.DeleteProductUC);
+  const getProductsUC = di.resolve<GetProductsUseCase>(TOKENS.GetProductsUC);
+  const getProductByIdUC = di.resolve<GetProductByIdUseCase>(TOKENS.GetProductByIdUC);
+
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

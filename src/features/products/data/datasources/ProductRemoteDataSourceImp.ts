@@ -10,11 +10,9 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
   private table = "Product";
 
   private prefs: ILocalPreferences;
-  private authService: AuthRemoteDataSourceImpl;
 
-  constructor() {
+  constructor(private authService: AuthRemoteDataSourceImpl) {
     this.prefs = LocalPreferencesAsyncStorage.getInstance();
-    this.authService = new AuthRemoteDataSourceImpl();
   }
 
   private async authorizedFetch(
