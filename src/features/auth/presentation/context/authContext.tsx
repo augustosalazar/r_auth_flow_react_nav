@@ -3,19 +3,14 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthPrefsDataSource } from "../../data/datasources/AuthPrefsDataSource";
 import { AuthRemoteDataSourceImpl } from "../../data/datasources/AuthRemoteDataSourceImp";
 import { AuthRepositoryImpl } from "../../data/repositories/AuthRepositoryImpl";
-import { GetCurrentUserUseCase } from "../../domain/auth/usecases/GetCurrentUserUseCase";
-import { LoginUseCase } from "../../domain/auth/usecases/LoginUseCase";
-import { LogoutUseCase } from "../../domain/auth/usecases/LogoutUseCase";
-import { SignupUseCase } from "../../domain/auth/usecases/SignupUseCase";
+
 import { AuthUser } from "../../domain/entities/AuthUser";
+import { GetCurrentUserUseCase } from "../../domain/usecases/GetCurrentUserUseCase";
+import { LoginUseCase } from "../../domain/usecases/LoginUseCase";
+import { LogoutUseCase } from "../../domain/usecases/LogoutUseCase";
+import { SignupUseCase } from "../../domain/usecases/SignupUseCase";
 
 
-// build the data source → repo → use cases
-
-// use this to have users in memory only
-//const localDataSource = new AuthLocalDataSource();
-
-// use this to have users persisted in local storage (AsyncStorage)
 const prefsImpl = LocalPreferencesAsyncStorage.getInstance();
 const localDataSource = new AuthPrefsDataSource(prefsImpl);
 
