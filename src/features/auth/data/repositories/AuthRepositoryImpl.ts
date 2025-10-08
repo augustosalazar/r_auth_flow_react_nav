@@ -1,27 +1,28 @@
 import { AuthUser } from "../../domain/entities/AuthUser";
 import { AuthRepository } from "../../domain/repositories/AuthRepository";
-import { AuthLocalDataSource } from "../datasources/AuthLocalDataSource";
+import { AuthRemoteDataSource } from "../datasources/AuthRemoteDataSource";
 
 export class AuthRepositoryImpl implements AuthRepository {
-  private localDataSource: AuthLocalDataSource;
+  private dataSource: AuthRemoteDataSource;
 
-  constructor(localDataSource: AuthLocalDataSource) {
-    this.localDataSource = localDataSource;
+  constructor(dataSource: AuthRemoteDataSource) {
+    this.dataSource = dataSource;
   }
 
-  async login(email: string, password: string): Promise<AuthUser> {
-    return this.localDataSource.login(email, password);
+  async login(email: string, password: string): Promise<void> {
+    return this.dataSource.login(email, password);
   }
 
-  async signup(email: string, password: string): Promise<AuthUser> {
-    return this.localDataSource.signup(email, password);
+  async signup(email: string, password: string): Promise<void> {
+    return this.dataSource.signUp(email, password);
   }
 
   async logout(): Promise<void> {
-    return this.localDataSource.logout();
+    return this.dataSource.logOut();
   }
 
   async getCurrentUser(): Promise<AuthUser | null> {
-    return this.localDataSource.getCurrentUser();
+   // return this.dataSource.getCurrentUser();
+    return null;
   }
 }

@@ -1,23 +1,24 @@
 import { NewProduct, Product } from "../../domain/entities/Product";
 import { ProductRepository } from "../../domain/repositories/ProductRepository";
-import { ProductLocalDataSource } from "../datasources/ProductLocalDataSource";
+import { ProductDataSource } from "../datasources/ProductDataSource";
+
 
 export class ProductRepositoryImpl implements ProductRepository {
-  constructor(private local: ProductLocalDataSource) {}
+  constructor(private local: ProductDataSource) {}
 
   async getProducts(): Promise<Product[]> {
     return this.local.getProducts();
   }
 
-  async getProductById(id: string): Promise<Product | null> {
+  async getProductById(id: string): Promise<Product | undefined> {
     return this.local.getProductById(id);
   }
 
-  async addProduct(product: NewProduct): Promise<Product> {
+  async addProduct(product: NewProduct): Promise<void> {
     return this.local.addProduct(product);
   }
 
-  async updateProduct(product: Product): Promise<Product> {
+  async updateProduct(product: Product): Promise<void> {
     return this.local.updateProduct(product);
   }
 
@@ -25,7 +26,5 @@ export class ProductRepositoryImpl implements ProductRepository {
     return this.local.deleteProduct(id);
   }
 
-  async getById(id: string): Promise<Product | undefined> {
-    return this.local.getById(id);
-  }
+
 }

@@ -1,12 +1,14 @@
 import { AuthUser } from "../../domain/entities/AuthUser";
+import { IAuthDataSource } from "./iAuthDataSource";
 
 type StoredUser = AuthUser & { password: string };
 
-export class AuthLocalDataSource {
+export class AuthLocalDataSource implements IAuthDataSource {
   private users: StoredUser[] = [
-    { id: "1", email: "test@example.com", password: "123456" },
+    { email: "test@example.com", password: "123456" },
   ];
   private currentUser: AuthUser | null = null;
+
 
   async login(email: string, password: string): Promise<AuthUser> {
     const user = this.users.find(
@@ -15,7 +17,7 @@ export class AuthLocalDataSource {
     if (!user) {
       throw new Error("Invalid credentials");
     }
-    this.currentUser = { id: user.id, email: user.email };
+    this.currentUser = { email: user.email, password: user.password };
     return this.currentUser;
   }
 
@@ -25,12 +27,11 @@ export class AuthLocalDataSource {
       throw new Error("User already exists");
     }
     const newUser: StoredUser = {
-      id: String(this.users.length + 1),
       email,
       password,
     };
     this.users.push(newUser);
-    this.currentUser = { id: newUser.id, email: newUser.email };
+    this.currentUser = { email: newUser.email, password: newUser.password };
     return this.currentUser;
   }
 
