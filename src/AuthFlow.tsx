@@ -10,7 +10,7 @@ import SignupScreen from "./features/auth/presentation/screens/SignupScreen";
 import AddProductScreen from "./features/products/presentation/screens/AddProductScreen";
 import ProductListScreen from "./features/products/presentation/screens/ProductListScreen";
 import UpdateProductScreen from "./features/products/presentation/screens/UpdateProductScreen";
-import SettingScreen from "./features/seetings/SettingScreen";
+import SettingScreen from "./features/settings/SettingScreen";
 
 
 const Stack = createStackNavigator();

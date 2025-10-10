@@ -20,6 +20,7 @@ import { Container } from "./container";
 const DIContext = createContext<Container | null>(null);
 
 export function DIProvider({ children }: { children: React.ReactNode }) {
+    //useMemo is a React Hook that lets you cache the result of a calculation between re-renders.
     const container = useMemo(() => {
         const c = new Container();
 
