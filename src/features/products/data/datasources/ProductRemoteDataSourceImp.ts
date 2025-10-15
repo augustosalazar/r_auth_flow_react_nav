@@ -5,14 +5,22 @@ import { NewProduct, Product } from "../../domain/entities/Product";
 import { ProductDataSource } from "./ProductDataSource";
 
 export class ProductRemoteDataSourceImp implements ProductDataSource {
-  private contract = "contract_flutterdemo_ebabe79ab0";
-  private baseUrl = "https://roble-api.openlab.uninorte.edu.co";
-  private table = "Product";
+  private readonly projectId: string;
+  private readonly baseUrl: string;
+  private readonly table = "Product";
 
   private prefs: ILocalPreferences;
 
-  constructor(private authService: AuthRemoteDataSourceImpl) {
+  constructor(
+    private authService: AuthRemoteDataSourceImpl,
+    projectId = process.env.EXPO_PUBLIC_ROBLE_PROJECT_ID
+  ) {
+    if (!projectId) {
+      throw new Error("Missing EXPO_PUBLIC_ROBLE_PROJECT_ID env var");
+    }
     this.prefs = LocalPreferencesAsyncStorage.getInstance();
+    this.projectId = projectId;
+    this.baseUrl = `https://roble-api.openlab.uninorte.edu.co/database/${this.projectId}`;
   }
 
   private async authorizedFetch(
@@ -51,7 +59,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
   }
 
   async getProducts(): Promise<Product[]> {
-    const url = `${this.baseUrl}/database/${this.contract}/read?tableName=${this.table}`;
+    const url = `${this.baseUrl}/read?tableName=${this.table}`;
 
     const response = await this.authorizedFetch(url, { method: "GET" });
 
@@ -69,7 +77,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
   }
 
   async getProductById(id: string): Promise<Product | undefined> {
-    const url = `${this.baseUrl}/database/${this.contract}/read?tableName=${this.table}&_id=${id}`;
+    const url = `${this.baseUrl}/read?tableName=${this.table}&_id=${id}`;
 
     const response = await this.authorizedFetch(url, { method: "GET" });
 
@@ -88,7 +96,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
     }
   }
   async addProduct(product: NewProduct): Promise<void> {
-    const url = `${this.baseUrl}/database/${this.contract}/insert`;
+    const url = `${this.baseUrl}/insert`;
 
     const body = JSON.stringify({
       tableName: this.table,
@@ -116,7 +124,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
   }
 
   async updateProduct(product: Product): Promise<void> {
-    const url = `${this.baseUrl}/database/${this.contract}/update`;
+    const url = `${this.baseUrl}/update`;
 
     const { _id, ...updates } = product; // 👈 separate id from fields
 
@@ -148,7 +156,7 @@ export class ProductRemoteDataSourceImp implements ProductDataSource {
   }
 
   async deleteProduct(id: string): Promise<void> {
-    const url = `${this.baseUrl}/database/${this.contract}/delete`;
+    const url = `${this.baseUrl}/delete`;
 
     const body = JSON.stringify({
       tableName: this.table,
