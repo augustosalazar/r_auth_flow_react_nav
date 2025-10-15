@@ -10,7 +10,13 @@ This is a starter project for building React Native apps with [Expo](https://exp
    npm install
    ```
 
-2. Start the app
+2. Create a `.env` file in the root directory and add your Roble project ID
+
+   ```
+   ROBLE_PROJECT_ID=your_project_id_here
+   ```
+
+3. Start the app
 
    ```bash
    npx expo start
