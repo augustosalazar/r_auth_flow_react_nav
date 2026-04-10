@@ -5,6 +5,7 @@ import React from "react";
 import { IconButton } from "react-native-paper";
 
 import { useAuth } from "./features/auth/presentation/context/authContext";
+import ForgotPasswordScreen from "./features/auth/presentation/screens/ForgotPasswordScreen";
 import LoginScreen from "./features/auth/presentation/screens/LoginScreen";
 import SignupScreen from "./features/auth/presentation/screens/SignupScreen";
 import AddProductScreen from "./features/products/presentation/screens/AddProductScreen";
@@ -89,6 +90,7 @@ export default function AuthFlow() {
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         </>
       )}
     </Stack.Navigator>

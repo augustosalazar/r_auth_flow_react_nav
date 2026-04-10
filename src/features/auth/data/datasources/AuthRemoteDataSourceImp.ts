@@ -91,7 +91,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw e;
     }
   }
-  async validate(email: string, validationCode: string): Promise<boolean> {
+  async validate(email: string, validationCode: string): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}/verify-email`, {
         method: "POST",
@@ -100,7 +100,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       });
 
       if (response.status === 201) {
-        return true;
+        return Promise.resolve();
       } else {
         const body = await response.json();
         throw new Error(`Validation error: ${body.message}`);
@@ -140,7 +140,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw e;
     }
   }
-  forgotPassword(email: string): Promise<boolean> {
+  forgotPassword(email: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
   resetPassword(

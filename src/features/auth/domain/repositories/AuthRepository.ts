@@ -5,4 +5,6 @@ export interface AuthRepository {
   signup(email: string, password: string): Promise<void>;
   logout(): Promise<void>;
   getCurrentUser(): Promise<AuthUser | null>;
+  forgotPassword(email: string): Promise<void>;
+  validate(email: string, validationCode: string): Promise<void>;
 }

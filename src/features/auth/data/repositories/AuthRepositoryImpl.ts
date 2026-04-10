@@ -22,7 +22,15 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
 
   async getCurrentUser(): Promise<AuthUser | null> {
-   // return this.dataSource.getCurrentUser();
+    // return this.dataSource.getCurrentUser();
     return null;
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    return this.dataSource.forgotPassword(email);
+  }
+
+  async validate(email: string, validationCode: string): Promise<void> {
+    return this.dataSource.validate(email, validationCode);
   }
 }
