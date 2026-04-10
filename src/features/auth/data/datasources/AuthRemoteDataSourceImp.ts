@@ -31,14 +31,14 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         const refreshToken = data["refreshToken"];
         await this.prefs.storeData("token", token);
         await this.prefs.storeData("refreshToken", refreshToken);
-        console.log("Token:", token, "\nRefresh Token:", refreshToken);
+        //console.log("Token:", token, "\nRefresh Token:", refreshToken);
         return Promise.resolve();
       } else {
         const body = await response.json();
         throw new Error(`Login error: ${body.message}`);
       }
     } catch (e: any) {
-      console.error("Login failed", e);
+      //console.error("Login failed", e);
       throw e;
     }
   }
@@ -87,7 +87,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw new Error(`Logout error: ${body.message}`);
       }
     } catch (e: any) {
-      console.error("Logout failed", e);
+      //console.error("Logout failed", e);
       throw e;
     }
   }

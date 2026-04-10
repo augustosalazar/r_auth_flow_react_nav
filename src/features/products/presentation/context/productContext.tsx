@@ -1,4 +1,3 @@
-// src/context/productContext.tsx
 import React, {
   createContext,
   ReactNode,
@@ -11,17 +10,13 @@ import React, {
 import { useDI } from "@/src/core/di/DIProvider";
 import { TOKENS } from "@/src/core/di/tokens";
 import { NewProduct, Product } from "@/src/features/products/domain/entities/Product";
-import { AddProductUseCase } from "../../domain/usecases/AddProductUseCase";
-import { DeleteProductUseCase } from "../../domain/usecases/DeleteProductUseCase";
-import { GetProductByIdUseCase } from "../../domain/usecases/GetProductByIdUseCase";
-import { GetProductsUseCase } from "../../domain/usecases/GetProductsUseCase";
-import { UpdateProductUseCase } from "../../domain/usecases/UpdateProductUseCase";
+import { ProductRepository } from "../../domain/repositories/ProductRepository";
 
-// --- Context ---
 type ProductContextType = {
   products: Product[];
   isLoading: boolean;
   error: string | null;
+  clearError: () => void;
   addProduct: (product: NewProduct) => Promise<void>;
   updateProduct: (product: Product) => Promise<void>;
   removeProduct: (id: string) => Promise<void>;
@@ -32,20 +27,17 @@ type ProductContextType = {
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function ProductProvider({ children }: { children: ReactNode }) {
-
   const di = useDI();
 
-  const addProductUC = di.resolve<AddProductUseCase>(TOKENS.AddProductUC);
-  const updateProductUC = di.resolve<UpdateProductUseCase>(TOKENS.UpdateProductUC);
-  const deleteProductUC = di.resolve<DeleteProductUseCase>(TOKENS.DeleteProductUC);
-  const getProductsUC = di.resolve<GetProductsUseCase>(TOKENS.GetProductsUC);
-  const getProductByIdUC = di.resolve<GetProductByIdUseCase>(TOKENS.GetProductByIdUC);
+  // ✅ Directly resolve the repository, no use cases
+  const productRepo = useMemo(() => di.resolve<ProductRepository>(TOKENS.ProductRepo), [di]);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load products initially
+  const clearError = () => setError(null);
+
   useEffect(() => {
     refreshProducts();
   }, []);
@@ -54,7 +46,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       setError(null);
-      const list = await getProductsUC.execute();
+      const list = await productRepo.getProducts();
       setProducts(list);
     } catch (e) {
       setError((e as Error).message);
@@ -67,7 +59,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       setError(null);
-      await addProductUC.execute(product);
+      await productRepo.addProduct(product);
       await refreshProducts();
     } catch (e) {
       setError((e as Error).message);
@@ -80,7 +72,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       setError(null);
-      await updateProductUC.execute(product);
+      await productRepo.updateProduct(product);
       await refreshProducts();
     } catch (e) {
       setError((e as Error).message);
@@ -93,7 +85,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       setError(null);
-      await deleteProductUC.execute(id);
+      await productRepo.deleteProduct(id);
       await refreshProducts();
     } catch (e) {
       setError((e as Error).message);
@@ -103,11 +95,11 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   };
 
   const getProduct = async (id: string) => {
-    console.log("Getting product with id:", id);
+    if (__DEV__) console.log("Getting product with id:", id);
     try {
       setIsLoading(true);
       setError(null);
-      return await getProductByIdUC.execute(id);
+      return await productRepo.getProductById(id);
     } catch (e) {
       setError((e as Error).message);
       return undefined;
@@ -116,13 +108,12 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }
   };
 
-
-
   const value = useMemo(
     () => ({
       products,
       isLoading,
       error,
+      clearError,
       addProduct,
       updateProduct,
       removeProduct,
@@ -139,8 +130,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
 export function useProducts() {
   const ctx = useContext(ProductContext);
-  if (!ctx) {
-    throw new Error("useProducts must be used inside ProductProvider");
-  }
+  if (!ctx) throw new Error("useProducts must be used inside ProductProvider");
   return ctx;
 }

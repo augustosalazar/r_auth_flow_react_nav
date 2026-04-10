@@ -1,21 +1,51 @@
-
-import React, { useState } from "react";
-import { Button, Surface, Text, TextInput } from "react-native-paper";
+import React, { useRef, useState } from "react";
+import { Keyboard, TextInput as RNTextInput, View } from "react-native";
+import { Button, HelperText, Snackbar, Surface, Text, TextInput } from "react-native-paper";
 import { useAuth } from "../context/authContext";
 
+interface FormErrors {
+  email?: string;
+  password?: string;
+}
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
-  const { login } = useAuth();
+  const { login, error, clearError } = useAuth();
+
   const [email, setEmail] = useState("a@a.com");
   const [password, setPassword] = useState("ThePassword!1");
+  const [obscurePassword, setObscurePassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const handleLogin = async () => {
+  const passwordRef = useRef<RNTextInput>(null);
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
+      newErrors.email = "Enter email";
+    } else if (!trimmedEmail.includes("@")) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!password) {
+      newErrors.password = "Enter password";
+    } else if (password.length < 6) {
+      newErrors.password = "Password should have at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    Keyboard.dismiss();
+    if (!validate()) return;
+
     try {
       setLoading(true);
-      await login(email, password);
-    } catch (err) {
-      console.error("Login failed", err);
+      await login(email.trim(), password);
     } finally {
       setLoading(false);
     }
@@ -27,26 +57,60 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         Welcome! Please log in
       </Text>
 
+      {/* EMAIL */}
       <TextInput
         label="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(v) => {
+          setEmail(v);
+          if (errors.email) setErrors((e) => ({ ...e, email: undefined }));
+        }}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={{ marginBottom: 12 }}
+        error={!!errors.email}
+        returnKeyType="next"
+        onSubmitEditing={() => passwordRef.current?.focus()}
+        style={{ marginBottom: 4 }}
       />
+      <HelperText type="error" visible={!!errors.email}>
+        {errors.email}
+      </HelperText>
 
+      {/* PASSWORD */}
       <TextInput
+        ref={passwordRef}
         label="Password"
         value={password}
-        onChangeText={setPassword}
-        secureTextEntry={true}
-        style={{ marginBottom: 20 }}
+        onChangeText={(v) => {
+          setPassword(v);
+          if (errors.password) setErrors((e) => ({ ...e, password: undefined }));
+        }}
+        secureTextEntry={obscurePassword}
+        right={
+          <TextInput.Icon
+            icon={obscurePassword ? "eye-outline" : "eye-off-outline"}
+            onPress={() => setObscurePassword((v) => !v)}
+          />
+        }
+        error={!!errors.password}
+        returnKeyType="done"
+        onSubmitEditing={handleSubmit}
+        style={{ marginBottom: 4 }}
       />
+      <HelperText type="error" visible={!!errors.password}>
+        {errors.password}
+      </HelperText>
+
+      {/* FORGOT PASSWORD */}
+      <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
+        <Button mode="text" compact onPress={() => navigation.navigate("ForgotPassword")}>
+          Forgot password?
+        </Button>
+      </View>
 
       <Button
         mode="contained"
-        onPress={handleLogin}
+        onPress={handleSubmit}
         loading={loading}
         disabled={loading}
         style={{ marginBottom: 10 }}
@@ -54,10 +118,19 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         Log In
       </Button>
 
-      <Button mode="text" onPress={() => navigation.navigate('Signup')}>
-        Don’t have an account? Sign Up
+      <Button mode="text" onPress={() => navigation.navigate("Signup")}>
+        Don&apos;t have an account? Sign Up
       </Button>
 
+      {/* ERROR SNACKBAR */}
+      <Snackbar
+        visible={!!error}
+        onDismiss={clearError}
+        duration={3000}
+        action={{ label: "Dismiss", onPress: clearError }}
+      >
+        {error}
+      </Snackbar>
     </Surface>
   );
 }

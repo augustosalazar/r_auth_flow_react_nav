@@ -12,52 +12,54 @@ import ProductListScreen from "./features/products/presentation/screens/ProductL
 import UpdateProductScreen from "./features/products/presentation/screens/UpdateProductScreen";
 import SettingScreen from "./features/settings/SettingScreen";
 
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function AuthFlow() {
-  const { isLoggedIn, logout } = useAuth();
 
-  function ContentTabs() {
-    return (
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: true,
-          headerTitle: "Auth demo with React Navigation",
-          headerRight: () => (
-            <IconButton icon="logout" onPress={() => logout()} />
+function ContentTabs() {
+  const { logout } = useAuth();
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTitle: "Auth demo with React Navigation",
+        headerRight: () => (
+          <IconButton icon="logout" onPress={() => logout()} />
+        ),
+        headerTitleAlign: "left",
+        headerStyle: {
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={ProductListScreen}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="house" size={24} color={color} iconStyle="solid" />
           ),
-          headerTitleAlign: "left",
-          headerStyle: {
-            elevation: 0, // Remove shadow on Android
-            shadowOpacity: 0, // Remove shadow on iOS
-          },
         }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={SettingScreen}
+        options={{
+          tabBarLabel: "Profile",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="user" size={24} color={color} iconStyle="solid" />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
-      >
-        <Tab.Screen
-          name="Home"
-          component={ProductListScreen}
-          options={{
-
-            tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="house" size={24} color={color} iconStyle="solid" />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={SettingScreen}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="user" size={24} color={color} />
-            )
-          }}
-        />
-      </Tab.Navigator>
-    );
-  }
+export default function AuthFlow() {
+  const { isLoggedIn } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -70,7 +72,7 @@ export default function AuthFlow() {
             options={{
               title: "Add Product",
               headerShown: true,
-              presentation: 'modal' // Optional: makes it slide up from bottom
+              presentation: "modal",
             }}
           />
           <Stack.Screen
@@ -79,7 +81,7 @@ export default function AuthFlow() {
             options={{
               title: "Update Product",
               headerShown: true,
-              presentation: 'modal' // Optional: makes it slide up from bottom
+              presentation: "modal",
             }}
           />
         </>
