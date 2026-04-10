@@ -6,7 +6,6 @@ import { PaperProvider } from "react-native-paper";
 import AuthFlow from "./src/AuthFlow";
 import { DIProvider } from "./src/core/di/DIProvider";
 import { AuthProvider } from "./src/features/auth/presentation/context/authContext";
-import { ProductProvider } from "./src/features/products/presentation/context/productContext";
 import { darkTheme, lightTheme } from "./src/theme/theme";
 
 
@@ -14,7 +13,8 @@ import { darkTheme, lightTheme } from "./src/theme/theme";
 export default function App() {
   const scheme = useColorScheme();
   const theme = scheme === "dark" ? darkTheme : lightTheme;
-  console.log("Current theme:", scheme);
+
+  if (__DEV__) console.log("Current theme:", scheme);
 
   const navigationTheme = {
     ...(scheme === "dark" ? DarkTheme : DefaultTheme),
@@ -32,13 +32,12 @@ export default function App() {
   return (
     <DIProvider>
       <AuthProvider>
-        <ProductProvider>
-          <PaperProvider theme={theme}>
-            <NavigationContainer theme={navigationTheme}>
-              <AuthFlow />
-            </NavigationContainer>
-          </PaperProvider>
-        </ProductProvider>
+        {/* ✅ ProductProvider removed from here */}
+        <PaperProvider theme={theme}>
+          <NavigationContainer theme={navigationTheme}>
+            <AuthFlow />
+          </NavigationContainer>
+        </PaperProvider>
       </AuthProvider>
     </DIProvider>
   );

@@ -8,6 +8,7 @@ import { useAuth } from "./features/auth/presentation/context/authContext";
 import ForgotPasswordScreen from "./features/auth/presentation/screens/ForgotPasswordScreen";
 import LoginScreen from "./features/auth/presentation/screens/LoginScreen";
 import SignupScreen from "./features/auth/presentation/screens/SignupScreen";
+import { ProductProvider } from "./features/products/presentation/context/productContext";
 import AddProductScreen from "./features/products/presentation/screens/AddProductScreen";
 import ProductListScreen from "./features/products/presentation/screens/ProductListScreen";
 import UpdateProductScreen from "./features/products/presentation/screens/UpdateProductScreen";
@@ -59,33 +60,41 @@ function ContentTabs() {
   );
 }
 
+function AuthenticatedStack() {
+  return (
+    <ProductProvider>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="App" component={ContentTabs} />
+        <Stack.Screen
+          name="AddProductScreen"
+          component={AddProductScreen}
+          options={{
+            title: "Add Product",
+            headerShown: true,
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="UpdateProductScreen"
+          component={UpdateProductScreen}
+          options={{
+            title: "Update Product",
+            headerShown: true,
+            presentation: "modal",
+          }}
+        />
+      </Stack.Navigator>
+    </ProductProvider>
+  );
+}
+
 export default function AuthFlow() {
   const { isLoggedIn } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
-        <>
-          <Stack.Screen name="App" component={ContentTabs} />
-          <Stack.Screen
-            name="AddProductScreen"
-            component={AddProductScreen}
-            options={{
-              title: "Add Product",
-              headerShown: true,
-              presentation: "modal",
-            }}
-          />
-          <Stack.Screen
-            name="UpdateProductScreen"
-            component={UpdateProductScreen}
-            options={{
-              title: "Update Product",
-              headerShown: true,
-              presentation: "modal",
-            }}
-          />
-        </>
+        <Stack.Screen name="Authenticated" component={AuthenticatedStack} />
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
