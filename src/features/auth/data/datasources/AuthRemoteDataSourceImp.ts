@@ -113,11 +113,12 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   async refreshToken(): Promise<boolean> {
     try {
-      const refreshToken = await this.prefs.retrieveData<string>(
-        "refreshToken"
-      );
-      if (!refreshToken) throw new Error("No refresh token found");
-
+      const refreshToken =
+        await this.prefs.retrieveData<string>("refreshToken");
+      if (!refreshToken) {
+        console.warn("Refresh token failed", "No refresh token found");
+        return false;
+      }
       const response = await fetch(`${this.baseUrl}/refresh-token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -145,7 +146,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   resetPassword(
     email: string,
     newPassword: string,
-    validationCode: string
+    validationCode: string,
   ): Promise<boolean> {
     throw new Error("Method not implemented.");
   }

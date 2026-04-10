@@ -1,7 +1,7 @@
 
 import { Product } from "@/src/features/products/domain/entities/Product";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Surface, Text, TextInput } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 

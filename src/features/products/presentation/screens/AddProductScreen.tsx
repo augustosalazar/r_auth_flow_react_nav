@@ -1,7 +1,7 @@
 
 
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Surface, TextInput } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 

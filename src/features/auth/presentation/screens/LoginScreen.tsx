@@ -1,13 +1,13 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Surface, Text, TextInput } from "react-native-paper";
 import { useAuth } from "../context/authContext";
 
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("a@a.com");
+  const [password, setPassword] = useState("ThePassword!1");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
