@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "r_auth_flow_react_nav",
-    "slug": "r_auth_flow_react_nav",
+    "slug": "authproducttemplayte",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -36,6 +36,12 @@
           "imageWidth": 200
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a7ddec17-a789-42a1-bc9d-2a7d44320ba3"
+      }
+    },
+    "owner": "augustosalazar"
   }
 }
