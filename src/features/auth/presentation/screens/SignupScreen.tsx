@@ -48,7 +48,7 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <Surface testID="signup-screen" style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
         Create an Account
       </Text>

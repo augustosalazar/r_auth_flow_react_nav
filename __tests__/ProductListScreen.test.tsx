@@ -1,7 +1,7 @@
 // __tests__/ProductListScreen.test.tsx
 
 import { NavigationContainer } from "@react-navigation/native";
-import { render, waitFor } from "@testing-library/react-native";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import React from "react";
 import { PaperProvider } from "react-native-paper";
 
@@ -117,30 +117,30 @@ describe("ProductListScreen", () => {
 
     });
 
-    // describe("interactions", () => {
+    describe("interactions", () => {
 
-    //     it("calls logout when logout button is pressed", async () => {
-    //         const mockLogout = jest.fn();
-    //         const { getByTestId } = renderScreen({ logout: mockLogout });
+        it("calls logout when logout button is pressed", async () => {
+            const mockLogout = jest.fn();
+            const { getByTestId } = renderScreen({ logout: mockLogout });
 
-    //         fireEvent.press(getByTestId("logout-button"));
+            fireEvent.press(getByTestId("logout-button"));
 
-    //         await waitFor(() => {
-    //             expect(mockLogout).toHaveBeenCalledTimes(1);
-    //         });
-    //     });
+            await waitFor(() => {
+                expect(mockLogout).toHaveBeenCalledTimes(1);
+            });
+        });
 
-    //     it("calls removeProduct when delete all button is pressed", async () => {
-    //         const mockRemoveProduct = jest.fn().mockResolvedValue(undefined);
-    //         const { getByTestId } = renderScreen({}, { removeProduct: mockRemoveProduct });
+        it("calls removeProduct when delete all button is pressed", async () => {
+            const mockRemoveProduct = jest.fn().mockResolvedValue(undefined);
+            const { getByTestId } = renderScreen({}, { removeProduct: mockRemoveProduct });
 
-    //         fireEvent.press(getByTestId("delete-all-button"));
+            fireEvent.press(getByTestId("delete-all-button"));
 
-    //         await waitFor(() => {
-    //             expect(mockRemoveProduct).toHaveBeenCalled();
-    //         });
-    //     });
+            await waitFor(() => {
+                expect(mockRemoveProduct).toHaveBeenCalled();
+            });
+        });
 
-    // });
+    });
 
 });

@@ -79,6 +79,7 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
       {/* Floating Action Button */}
       <FAB
         icon="plus"
+        testID="add-product-fab"
         style={{
           position: "absolute",
           right: 16,

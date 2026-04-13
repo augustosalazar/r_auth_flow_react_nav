@@ -22,11 +22,19 @@ This is a starter project for building React Native apps with [Expo](https://exp
    npx expo start
    ```
 
+4. Test with Jest
+
+   ```bash
+   npm test
+   ```
+
 ## Dependencies
+
 - [Expo](https://expo.dev/) - A framework and platform for universal React applications.
 - [React Navigation](https://reactnavigation.org/) - Routing and navigation for your React Native
 - [Async Storage](https://react-native-async-storage.github.io/async-storage/) - An asynchronous, unencrypted, persistent, key-value storage system for React Native.
 
 ## Functions
+
 - User authentication (login, logout, register) with Roble
 - Product management (create, update, delete) with Roble
