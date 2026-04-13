@@ -2,7 +2,6 @@ import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { IconButton } from "react-native-paper";
 
 import { useAuth } from "./features/auth/presentation/context/authContext";
 import ForgotPasswordScreen from "./features/auth/presentation/screens/ForgotPasswordScreen";
@@ -24,17 +23,20 @@ function ContentTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: true,
-        headerTitle: "Auth demo with React Navigation",
-        headerRight: () => (
-          <IconButton icon="logout" onPress={() => logout()} />
-        ),
-        headerTitleAlign: "left",
-        headerStyle: {
-          elevation: 0,
-          shadowOpacity: 0,
-        },
+        headerShown: false,
       }}
+    // screenOptions={{
+    //   headerShown: true,
+    //   headerTitle: "Auth demo with React Navigation",
+    //   headerRight: () => (
+    //     <IconButton icon="logout" onPress={() => logout()} />
+    //   ),
+    //   headerTitleAlign: "left",
+    //   headerStyle: {
+    //     elevation: 0,
+    //     shadowOpacity: 0,
+    //   },
+    // }}
     >
       <Tab.Screen
         name="Home"

@@ -12,7 +12,7 @@ import { TOKENS } from "@/src/core/di/tokens";
 import { NewProduct, Product } from "@/src/features/products/domain/entities/Product";
 import { ProductRepository } from "../../domain/repositories/ProductRepository";
 
-type ProductContextType = {
+export type ProductContextType = {
   products: Product[];
   isLoading: boolean;
   error: string | null;
@@ -24,7 +24,7 @@ type ProductContextType = {
   refreshProducts: () => Promise<void>;
 };
 
-const ProductContext = createContext<ProductContextType | undefined>(undefined);
+export const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function ProductProvider({ children }: { children: ReactNode }) {
   const di = useDI();
