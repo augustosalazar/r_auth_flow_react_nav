@@ -123,7 +123,9 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         Log In
       </Button>
 
-      <Button mode="text" onPress={() => navigation.navigate("Signup")}>
+      <Button
+        testID="create-account-button"
+        mode="text" onPress={() => navigation.navigate("Signup")}>
         Don&apos;t have an account? Sign Up
       </Button>
 

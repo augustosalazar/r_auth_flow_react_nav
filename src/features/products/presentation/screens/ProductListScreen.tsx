@@ -18,7 +18,9 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
     );
   }
   return (
-    <Surface style={{ flex: 1 }}>
+    <Surface
+      testID="product-screen"
+      style={{ flex: 1 }}>
       {/* AppBar with Logout */}
       <Appbar.Header>
         <Appbar.Content title="Products" />
