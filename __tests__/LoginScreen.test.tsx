@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { render } from "@testing-library/react-native";
+import { render, waitFor } from "@testing-library/react-native";
 import React from "react";
 import { PaperProvider } from "react-native-paper";
 
@@ -51,30 +51,30 @@ describe("LoginScreen", () => {
             expect(getByTestId("login-screen")).toBeTruthy();
         });
 
-        // it("shows email and password fields with default values", () => {
-        //     const { getByTestId } = renderScreen();
-        //     expect(getByTestId("email-input").props.value).toBe("a@a.com");
-        //     expect(getByTestId("password-input").props.value).toBe("ThePassword!1");
-        // });
+        it("shows email and password fields with default values", () => {
+            const { getByTestId } = renderScreen();
+            expect(getByTestId("email-input").props.value).toBe("a@a.com");
+            expect(getByTestId("password-input").props.value).toBe("ThePassword!1");
+        });
 
-        // it("shows Log In button", () => {
-        //     const { getByTestId } = renderScreen();
-        //     expect(getByTestId("login-button")).toBeTruthy();
-        // });
+        it("shows Log In button", () => {
+            const { getByTestId } = renderScreen();
+            expect(getByTestId("login-button")).toBeTruthy();
+        });
 
-        // it("shows Forgot password and Sign Up buttons", () => {
-        //     const { getByText } = renderScreen();
-        //     expect(getByText("Forgot password?")).toBeTruthy();
-        //     expect(getByText("Don't have an account? Sign Up")).toBeTruthy();
-        // });
+        it("shows Forgot password and Sign Up buttons", () => {
+            const { getByText } = renderScreen();
+            expect(getByText("Forgot password?")).toBeTruthy();
+            expect(getByText("Don't have an account? Sign Up")).toBeTruthy();
+        });
 
-        // it("shows error snackbar when error is set", async () => {
-        //     const { getByText } = renderScreen({ error: "Login failed" });
+        it("shows error snackbar when error is set", async () => {
+            const { getByText } = renderScreen({ error: "Login failed" });
 
-        //     await waitFor(() => {
-        //         expect(getByText("Login failed")).toBeTruthy();
-        //     });
-        // });
+            await waitFor(() => {
+                expect(getByText("Login failed")).toBeTruthy();
+            });
+        });
 
     });
 
