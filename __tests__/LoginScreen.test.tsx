@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { render, waitFor } from "@testing-library/react-native";
-import React from "react";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
+import React, { act } from "react";
 import { PaperProvider } from "react-native-paper";
 
 import { AuthContext, AuthContextType } from "@/src/features/auth/presentation/context/authContext";
@@ -80,129 +80,139 @@ describe("LoginScreen", () => {
 
     describe("validation", () => {
 
-        // it("shows error when email is empty", async () => {
-        //     const { getByText, getByTestId } = renderScreen();
+        it("shows error when email is empty", async () => {
+            const { getByText, getByTestId } = renderScreen();
 
-        //     await act(async () => {
-        //         fireEvent.changeText(getByTestId("email-input"), "");
-        //         fireEvent.press(getByTestId("login-button"));
-        //     });
+            fireEvent.changeText(getByTestId("email-input"), "");
 
-        //     await waitFor(() => {
-        //         expect(getByText("Enter email")).toBeTruthy();
-        //     });
-        // });
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
 
-        // it("shows error when email is invalid", async () => {
-        //     const { getByText, getByTestId } = renderScreen();
+            await waitFor(() => {
+                expect(getByText("Enter email")).toBeTruthy();
+            });
+        });
 
-        //     await act(async () => {
-        //         fireEvent.changeText(getByTestId("email-input"), "invalidemail");
-        //         fireEvent.press(getByTestId("login-button"));
-        //     });
 
-        //     await waitFor(() => {
-        //         expect(getByText("Enter a valid email address")).toBeTruthy();
-        //     });
-        // });
+        it("shows error when email is invalid", async () => {
+            const { getByText, getByTestId } = renderScreen();
 
-        // it("shows error when password is empty", async () => {
-        //     const { getByText, getByTestId } = renderScreen();
+            fireEvent.changeText(getByTestId("email-input"), "invalidemail");
 
-        //     await act(async () => {
-        //         fireEvent.changeText(getByTestId("email-input"), "a@a.com");
-        //         fireEvent.changeText(getByTestId("password-input"), "");
-        //         fireEvent.press(getByTestId("login-button"));
-        //     });
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
 
-        //     await waitFor(() => {
-        //         expect(getByText("Enter password")).toBeTruthy();
-        //     });
-        // });
+            await waitFor(() => {
+                expect(getByText("Enter a valid email address")).toBeTruthy();
+            });
+        });
 
-        //     it("shows error when password is too short", async () => {
-        //         const { getByText, getByTestId } = renderScreen();
 
-        //         await act(async () => {
-        //             fireEvent.changeText(getByTestId("email-input"), "");
-        //             fireEvent.changeText(getByTestId("password-input"), "");
-        //             fireEvent.changeText(getByTestId("password-input"), "123");
-        //             fireEvent.press(getByTestId("login-button"));
-        //         });
+        it("shows error when password is empty", async () => {
+            const { getByText, getByTestId } = renderScreen();
 
-        //         await waitFor(() => {
-        //             expect(getByText("Password should have at least 6 characters")).toBeTruthy();
-        //         });
-        //     });
+            fireEvent.changeText(getByTestId("email-input"), "a@a.com");
+            fireEvent.changeText(getByTestId("password-input"), "");
 
-        //     it("does not call login when validation fails", async () => {
-        //         const mockLogin = jest.fn();
-        //         const { getByTestId } = renderScreen({ login: mockLogin });
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
 
-        //         await act(async () => {
-        //             fireEvent.changeText(getByTestId("email-input"), "");
-        //             fireEvent.press(getByTestId("login-button"));
-        //         });
+            await waitFor(() => {
+                expect(getByText("Enter password")).toBeTruthy();
+            });
+        });
 
-        //         await waitFor(() => {
-        //             expect(mockLogin).not.toHaveBeenCalled();
-        //         });
-        //     });
+        it("shows error when password is too short", async () => {
+            const { getByText, getByTestId } = renderScreen();
 
-        // });
+            fireEvent.changeText(getByTestId("email-input"), "a@a.com");
+            fireEvent.changeText(getByTestId("password-input"), "123");
 
-        // describe("interactions", () => {
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
 
-        //     it("calls login with correct values", async () => {
-        //         const mockLogin = jest.fn().mockResolvedValue(undefined);
-        //         const { getByTestId } = renderScreen({ login: mockLogin });
+            await waitFor(() => {
+                expect(getByText("Password should have at least 6 characters")).toBeTruthy();
+            });
+        });
 
-        //         await act(async () => {
-        //             fireEvent.changeText(getByTestId("email-input"), "");
-        //             fireEvent.changeText(getByTestId("password-input"), "");
-        //             fireEvent.changeText(getByTestId("email-input"), "test@test.com");
-        //             fireEvent.changeText(getByTestId("password-input"), "password123");
-        //             fireEvent.press(getByTestId("login-button"));
-        //         });
 
-        //         await waitFor(() => {
-        //             expect(mockLogin).toHaveBeenCalledWith("test@test.com", "password123");
-        //         });
-        //     });
+        it("does not call login when validation fails", async () => {
+            const mockLogin = jest.fn();
+            const { getByTestId } = renderScreen({ login: mockLogin });
 
-        //     it("calls login with default prefilled values", async () => {
-        //         const mockLogin = jest.fn().mockResolvedValue(undefined);
-        //         const { getByTestId } = renderScreen({ login: mockLogin });
+            fireEvent.changeText(getByTestId("email-input"), "");
 
-        //         await act(async () => {
-        //             fireEvent.press(getByTestId("login-button"));
-        //         });
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
 
-        //         await waitFor(() => {
-        //             expect(mockLogin).toHaveBeenCalledWith("a@a.com", "ThePassword!1");
-        //         });
-        //     });
+            await waitFor(() => {
+                expect(mockLogin).not.toHaveBeenCalled();
+            });
+        });
 
-        //     it("clears email error when user starts typing", async () => {
-        //         const { getByText, getByTestId, queryByText } = renderScreen();
 
-        //         await act(async () => {
-        //             fireEvent.changeText(getByTestId("email-input"), "");
-        //             fireEvent.press(getByTestId("login-button"));
-        //         });
+    });
 
-        //         await waitFor(() => {
-        //             expect(getByText("Enter email")).toBeTruthy();
-        //         });
+    describe("interactions", () => {
 
-        //         await act(async () => {
-        //             fireEvent.changeText(getByTestId("email-input"), "t");
-        //         });
+        it("calls login with correct values", async () => {
+            const mockLogin = jest.fn().mockResolvedValue(undefined);
+            const { getByTestId } = renderScreen({ login: mockLogin });
 
-        //         await waitFor(() => {
-        //             expect(queryByText("Enter email")).toBeNull();
-        //         });
-        //     });
+            fireEvent.changeText(getByTestId("email-input"), "test@test.com");
+            fireEvent.changeText(getByTestId("password-input"), "password123");
+
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
+
+            await waitFor(() => {
+                expect(mockLogin).toHaveBeenCalledWith("test@test.com", "password123");
+            });
+        });
+
+
+        it("calls login with default prefilled values", async () => {
+            const mockLogin = jest.fn().mockResolvedValue(undefined);
+            const { getByTestId } = renderScreen({ login: mockLogin });
+
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
+
+            await waitFor(() => {
+                expect(mockLogin).toHaveBeenCalledWith("a@a.com", "ThePassword!1");
+            });
+        });
+
+        it("clears email error when user starts typing", async () => {
+            const { getByText, getByTestId, queryByText } = renderScreen();
+
+            fireEvent.changeText(getByTestId("email-input"), "");
+
+            await act(async () => {
+                fireEvent.press(getByTestId("login-button"));
+            });
+
+            await waitFor(() => {
+                expect(getByText("Enter email")).toBeTruthy();
+            });
+
+            await act(async () => {
+                fireEvent.changeText(getByTestId("email-input"), "t");
+            });
+
+            await waitFor(() => {
+                expect(queryByText("Enter email")).toBeNull();
+            });
+        });
+
 
     });
 

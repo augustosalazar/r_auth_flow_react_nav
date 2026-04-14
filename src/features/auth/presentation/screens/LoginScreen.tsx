@@ -23,6 +23,8 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
     const newErrors: FormErrors = {};
     const trimmedEmail = email.trim();
 
+    console.log('validating email:', email);
+
     if (!trimmedEmail) {
       newErrors.email = "Enter email";
     } else if (!trimmedEmail.includes("@")) {
