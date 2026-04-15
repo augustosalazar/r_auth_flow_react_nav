@@ -1,129 +1,155 @@
-
 import { Product } from "@/src/features/products/domain/entities/Product";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Button, Surface, Text, TextInput } from "react-native-paper";
+import { Keyboard } from "react-native";
+import { ActivityIndicator, Button, HelperText, Surface, Text, TextInput } from "react-native-paper";
 import { useProducts } from "../context/productContext";
+
+interface FormErrors {
+  name?: string;
+  quantity?: string;
+}
 
 export default function UpdateProductScreen({ route }: { route: any }) {
   const { id } = route.params;
-
   const navigation = useNavigation();
-
   const { getProduct, updateProduct } = useProducts();
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [notFound, setNotFound] = useState(false);
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
-    console.log("UpdateProductScreen - Received id:", id);
+    if (!id) return;
+
     const load = async () => {
       try {
         setLoading(true);
-        console.log("UpdateProductScreen - Calling getProduct with id:", id);
         const p = await getProduct(id);
-        console.log("UpdateProductScreen - Retrieved product:", p);
-
         if (!p) {
-          console.log("UpdateProductScreen - Product not found");
           setNotFound(true);
         } else {
-          console.log("UpdateProductScreen - Setting product data:", {
-            name: p.name,
-            description: p.description,
-            quantity: p.quantity
-          });
           setProduct(p);
           setName(p.name);
           setDescription(p.description);
           setQuantity(p.quantity.toString());
         }
       } catch (error) {
-        console.error("UpdateProductScreen - Error loading product:", error);
         setNotFound(true);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      load();
-    }
+    load();
   }, [id]);
 
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!quantity.trim()) {
+      newErrors.quantity = "Quantity is required";
+    } else if (isNaN(Number(quantity)) || Number(quantity) < 0) {
+      newErrors.quantity = "Quantity must be a valid positive number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleUpdate = async () => {
-    if (!product) return;
+    Keyboard.dismiss();
+    if (!product || !validate()) return;
+
     await updateProduct({
       _id: product._id,
-      name,
-      description,
+      name: name.trim(),
+      description: description.trim(),
       quantity: Number(quantity),
     });
+
     navigation.goBack();
   };
 
   if (loading) {
     return (
-      <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
-        <Text>Loading product...</Text>
+      <Surface style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 16 }}>
+        <ActivityIndicator testID="loading-indicator" size="large" />
       </Surface>
     );
   }
 
-  if (notFound) {
+  if (notFound || !product) {
     return (
       <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
-        <Text variant="bodyLarge" style={{ color: "red" }}>
+        <Text testID="not-found-text" variant="bodyLarge" style={{ color: "red" }}>
           Product not found
         </Text>
       </Surface>
     );
   }
 
-  if (!product) {
-    return (
-      <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
-        <Text>Loading...</Text>
-      </Surface>
-    );
-  }
-
   return (
     <Surface style={{ flex: 1, justifyContent: "center", padding: 16 }}>
-      {/* <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
-        Update Product
-      </Text> */}
 
+      {/* NAME */}
       <TextInput
         label="Name"
+        testID="name-input"
         value={name}
-        onChangeText={setName}
-        style={{ marginBottom: 12 }}
+        onChangeText={(v) => {
+          setName(v);
+          if (errors.name) setErrors((e) => ({ ...e, name: undefined }));
+        }}
+        error={!!errors.name}
+        style={{ marginBottom: 4 }}
       />
+      {errors.name && (
+        <HelperText type="error" visible>
+          {errors.name}
+        </HelperText>
+      )}
 
+      {/* DESCRIPTION */}
       <TextInput
         label="Description"
+        testID="description-input"
         value={description}
         onChangeText={setDescription}
-        style={{ marginBottom: 12 }}
+        style={{ marginBottom: 4 }}
       />
 
+      {/* QUANTITY */}
       <TextInput
         label="Quantity"
+        testID="quantity-input"
         value={quantity}
-        onChangeText={setQuantity}
+        onChangeText={(v) => {
+          setQuantity(v);
+          if (errors.quantity) setErrors((e) => ({ ...e, quantity: undefined }));
+        }}
         keyboardType="numeric"
-        style={{ marginBottom: 12 }}
+        error={!!errors.quantity}
+        style={{ marginBottom: 4 }}
       />
+      {errors.quantity && (
+        <HelperText type="error" visible>
+          {errors.quantity}
+        </HelperText>
+      )}
 
-      <Button mode="contained" onPress={handleUpdate}>
+      <Button mode="contained" onPress={handleUpdate} style={{ marginTop: 8 }}>
         Update
       </Button>
+
     </Surface>
   );
 }

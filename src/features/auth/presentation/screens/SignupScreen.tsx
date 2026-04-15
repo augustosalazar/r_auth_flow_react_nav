@@ -48,13 +48,14 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <Surface testID="signup-screen" style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
         Create an Account
       </Text>
 
       {/* EMAIL */}
       <TextInput
+        testID="signup-email-input"
         label="Email"
         value={email}
         onChangeText={(v) => {
@@ -68,12 +69,15 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
         onSubmitEditing={() => passwordRef.current?.focus()}
         style={{ marginBottom: 4 }}
       />
-      <HelperText type="error" visible={!!errors.email}>
-        {errors.email}
-      </HelperText>
+      {errors.email && (
+        <HelperText testID="signup-email-error" type="error" visible>
+          {errors.email}
+        </HelperText>
+      )}
 
       {/* PASSWORD */}
       <TextInput
+        testID="signup-password-input"
         ref={passwordRef}
         label="Password"
         value={password}
@@ -93,11 +97,14 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
         onSubmitEditing={handleSubmit}
         style={{ marginBottom: 4 }}
       />
-      <HelperText type="error" visible={!!errors.password}>
-        {errors.password}
-      </HelperText>
+      {errors.password && (
+        <HelperText testID="signup-password-error" type="error" visible>
+          {errors.password}
+        </HelperText>
+      )}
 
       <Button
+        testID="signup-button"
         mode="contained"
         onPress={handleSubmit}
         loading={loading}
@@ -107,12 +114,17 @@ export default function SignupScreen({ navigation }: { navigation: any }) {
         Sign Up
       </Button>
 
-      <Button mode="text" onPress={() => navigation.goBack()}>
+      <Button
+        testID="go-to-login-button"
+        mode="text"
+        onPress={() => navigation.goBack()}
+      >
         Already have an account? Log In
       </Button>
 
       {/* ERROR SNACKBAR */}
       <Snackbar
+        testID="signup-error-snackbar"
         visible={!!error}
         onDismiss={clearError}
         duration={3000}

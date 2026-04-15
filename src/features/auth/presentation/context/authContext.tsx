@@ -5,7 +5,7 @@ import { TOKENS } from "@/src/core/di/tokens";
 import { AuthUser } from "../../domain/entities/AuthUser";
 import { AuthRepository } from "../../domain/repositories/AuthRepository";
 
-type AuthContextType = {
+export type AuthContextType = {
   loggedUser: AuthUser | null;
   isLoggedIn: boolean;
   loading: boolean;
@@ -19,7 +19,7 @@ type AuthContextType = {
   getLoggedUser: () => Promise<any | null>;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const di = useDI();

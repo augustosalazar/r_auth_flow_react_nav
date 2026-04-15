@@ -23,6 +23,8 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
     const newErrors: FormErrors = {};
     const trimmedEmail = email.trim();
 
+    console.log('validating email:', email);
+
     if (!trimmedEmail) {
       newErrors.email = "Enter email";
     } else if (!trimmedEmail.includes("@")) {
@@ -52,13 +54,14 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <Surface style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+    <Surface testID="login-screen" style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text variant="headlineMedium" style={{ marginBottom: 20, textAlign: "center" }}>
         Welcome! Please log in
       </Text>
 
       {/* EMAIL */}
       <TextInput
+        testID="email-input"
         label="Email"
         value={email}
         onChangeText={(v) => {
@@ -78,6 +81,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
 
       {/* PASSWORD */}
       <TextInput
+        testID="password-input"
         ref={passwordRef}
         label="Password"
         value={password}
@@ -109,6 +113,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
       </View>
 
       <Button
+        testID="login-button"
         mode="contained"
         onPress={handleSubmit}
         loading={loading}
@@ -118,7 +123,9 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         Log In
       </Button>
 
-      <Button mode="text" onPress={() => navigation.navigate("Signup")}>
+      <Button
+        testID="create-account-button"
+        mode="text" onPress={() => navigation.navigate("Signup")}>
         Don&apos;t have an account? Sign Up
       </Button>
 

@@ -56,7 +56,7 @@ export class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       });
 
       if (response.status === 201) {
-        return Promise.resolve();
+        return this.login(email, password);
       } else {
         const body = await response.json();
         throw new Error(`Signup error: ${(body.message || []).join(" ")}`);

@@ -2,26 +2,43 @@
 import { useAuth } from "@/src/features/auth/presentation/context/authContext";
 import React from "react";
 import { FlatList, View } from "react-native";
-import { Button, FAB, List, Surface } from "react-native-paper";
+import { ActivityIndicator, Appbar, Button, FAB, List, Snackbar, Surface } from "react-native-paper";
 import { useProducts } from "../context/productContext";
 
 export default function ProductListScreen({ navigation }: { navigation: any }) {
-  const { products, removeProduct } = useProducts();
+  const { products, removeProduct, isLoading, error, clearError } = useProducts();
   const { logout } = useAuth();
 
+
+  if (isLoading) {
+    return (
+      <Surface style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator testID="loading-indicator" size="large" />
+      </Surface>
+    );
+  }
   return (
-    <Surface style={{ flex: 1 }}>
+    <Surface
+      testID="product-screen"
+      style={{ flex: 1 }}>
       {/* AppBar with Logout */}
-      {/* <Appbar.Header>
+      <Appbar.Header>
         <Appbar.Content title="Products" />
+        {products.length > 0 && (
+          <Appbar.Action
+            testID="delete-all-button"
+            icon="delete-outline"
+            onPress={() => products.forEach((p) => removeProduct(p._id))}
+          />
+        )}
         <Appbar.Action
+          testID="logout-button"
           icon="logout"
           onPress={() => {
             logout();
-            //router.replace("/(auth)/login");
           }}
         />
-      </Appbar.Header> */}
+      </Appbar.Header>
 
       {/* Empty state or Product list */}
       {products.length === 0 ? (
@@ -33,7 +50,7 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
           }}
         >
           <List.Icon icon="cart-outline" />
-          <List.Subheader>No products yet</List.Subheader>
+          <List.Subheader>No products found</List.Subheader>
         </View>
       ) : (
         <FlatList
@@ -52,7 +69,9 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
                 }
               }
               right={() => (
-                <Button onPress={() => removeProduct(item._id)}>Delete</Button>
+                <Button
+                  testID={`delete-button-${item._id}`}
+                  onPress={() => removeProduct(item._id)}>Delete</Button>
               )}
             />
           )}
@@ -62,6 +81,7 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
       {/* Floating Action Button */}
       <FAB
         icon="plus"
+        testID="add-product-fab"
         style={{
           position: "absolute",
           right: 16,
@@ -69,6 +89,15 @@ export default function ProductListScreen({ navigation }: { navigation: any }) {
         }}
         onPress={() => navigation.navigate("AddProductScreen")} // navigate to add
       />
+
+      <Snackbar
+        visible={!!error}
+        onDismiss={clearError}
+        duration={3000}
+        action={{ label: "Dismiss", onPress: clearError }}
+      >
+        {error}
+      </Snackbar>
     </Surface>
   );
 }
