@@ -6,8 +6,12 @@ import { ProductDataSource } from "../datasources/ProductDataSource";
 
 export class ProductRepositoryImpl implements ProductRepository {
 
-  constructor(private readonly remote: ProductDataSource, private readonly cache: LocalProductCacheSource) {
-   
+  private readonly remote: ProductDataSource;
+  private readonly cache: LocalProductCacheSource;
+
+  constructor( remote: ProductDataSource, cache: LocalProductCacheSource) {
+    this.remote = remote;
+    this.cache = cache;
   }
 
   async getProducts(): Promise<Product[]> {
