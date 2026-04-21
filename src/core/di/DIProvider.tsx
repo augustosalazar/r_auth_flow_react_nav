@@ -4,6 +4,7 @@ import { TOKENS } from "./tokens";
 
 import { AuthRemoteDataSourceImpl } from "@/src/features/auth/data/datasources/AuthRemoteDataSourceImp";
 import { AuthRepositoryImpl } from "@/src/features/auth/data/repositories/AuthRepositoryImpl";
+import { LocalProductCacheSource } from "@/src/features/products/data/datasources/local/LocalProductCacheSource";
 import { ProductRemoteDataSourceImp } from "@/src/features/products/data/datasources/ProductRemoteDataSourceImp";
 import { ProductRepositoryImpl } from "@/src/features/products/data/repositories/ProductRepositoryImpl";
 import { Container } from "./container";
@@ -20,12 +21,13 @@ export function DIProvider({ children }: { children: React.ReactNode }) {
         c.register(TOKENS.AuthRemoteDS, authDS)
             .register(TOKENS.AuthRepo, authRepo);
 
-
+        const localCacheDS = new LocalProductCacheSource();
         const remoteDS = new ProductRemoteDataSourceImp(authDS);
-        const productRepo = new ProductRepositoryImpl(remoteDS);
+        const productRepo = new ProductRepositoryImpl(remoteDS, localCacheDS);
 
-        c.register(TOKENS.ProductRemoteDS, remoteDS)
-            .register(TOKENS.ProductRepo, productRepo);
+        c.register(TOKENS.ProductRemoteDS, remoteDS).
+            register(TOKENS.LocalProductCacheDS, localCacheDS).
+            register(TOKENS.ProductRepo, productRepo);
 
 
 
