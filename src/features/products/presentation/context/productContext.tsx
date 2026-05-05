@@ -15,6 +15,7 @@ import { ProductRepository } from "../../domain/repositories/ProductRepository";
 export type ProductContextType = {
   products: Product[];
   isLoading: boolean;
+  isRefreshing: boolean;
   error: string | null;
   clearError: () => void;
   addProduct: (product: NewProduct) => Promise<void>;
@@ -22,6 +23,7 @@ export type ProductContextType = {
   removeProduct: (id: string) => Promise<void>;
   getProduct: (id: string) => Promise<Product | undefined>;
   refreshProducts: () => Promise<void>;
+  forceRefresh: () => Promise<void>;
 };
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -35,6 +37,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const clearError = () => setError(null);
 
@@ -52,6 +55,19 @@ export function ProductProvider({ children }: { children: ReactNode }) {
       setError((e as Error).message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const forceRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      setError(null);
+      const list = await productRepo.forceRefresh();
+      setProducts(list);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -112,6 +128,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     () => ({
       products,
       isLoading,
+      isRefreshing,
       error,
       clearError,
       addProduct,
@@ -119,6 +136,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
       removeProduct,
       getProduct,
       refreshProducts,
+      forceRefresh,
     }),
     [products, isLoading, error]
   );
